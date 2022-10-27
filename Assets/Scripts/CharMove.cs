@@ -8,12 +8,12 @@ public class CharMove : MonoBehaviour
     private float speed = 10f; 
     private float Jumps = 12f;
     private bool RightFacing = true;
-
-
+    public Transform LaunchOffset;
+    public GameObject ShootPrefab;
+   
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
-
 
     // Update is called once per frame
     void Update()
@@ -25,47 +25,42 @@ public class CharMove : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, Jumps);
         }
 
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(ShootPrefab,LaunchOffset.position, transform.rotation);
+        }
         
-        
-        
-        
-    }
-
-    
-
-    private void FixedUpdate()
-    {
         rb.velocity = new Vector2(Xaxis * speed, rb.velocity.y);
         
-        Xaxis = Input.GetAxis("Horizontal");
-
-       if(Input.GetKeyDown(KeyCode.A))
+        if(Input.GetKeyDown(KeyCode.A) )
         {
             rb.velocity = new Vector2(Xaxis * speed, rb.velocity.y);
+            RightFacing = true;
             Flip();
         }
 
         if(Input.GetKeyDown(KeyCode.D))
         {
             rb.velocity = new Vector2(Xaxis * speed, rb.velocity.y);
+            RightFacing = false;
             Flip();
         }
     }
-    
+
     private bool TouchingGrass()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
 
-
-    private void Flip()
+    void Flip()
     {
-        if(RightFacing && Xaxis < 0f || RightFacing && Xaxis > 0f)
+        if(RightFacing)
         {
-         RightFacing = !RightFacing;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= 1f;
-            transform.localScale = localScale;
+            gameObject.transform.localRotation = Quaternion.Euler(0,180,0);
+        }
+        else
+        {
+            gameObject.transform.localRotation = Quaternion.Euler(0,0,0);
         }
     }
 }
