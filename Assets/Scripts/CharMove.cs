@@ -14,6 +14,8 @@ public class CharMove : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private AudioSource JumpSound;
+    [SerializeField] private AudioSource ShootSound;
 
     // Update is called once per frame
     void Update()
@@ -23,11 +25,13 @@ public class CharMove : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.W) && TouchingGrass())
         {
             rb.velocity = new Vector2(rb.velocity.x, Jumps);
+            JumpSound.Play();
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(ShootPrefab,LaunchOffset.position, transform.rotation);
+            ShootSound.Play();
         }
         
         rb.velocity = new Vector2(Xaxis * speed, rb.velocity.y);
